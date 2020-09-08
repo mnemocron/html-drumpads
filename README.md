@@ -11,7 +11,19 @@ html/css/js drumpads to play drums and synths on your keyboards number block
 [![forthebadge](https://forthebadge.com/images/badges/just-plain-nasty.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/compatibility-ie-6.svg)](https://forthebadge.com)
 
-#### Disclaimer
+---
+
+### Drumpads
+
+Try it here: [simonmartin.ch/drumpads](https://simonmartin.ch/drumpads)
+
+[![video of drumpads](https://img.youtube.com/vi/BUSiQmA9tmw/0.jpg)](https://www.youtube.com/watch?v=BUSiQmA9tmw)
+
+The audio samples are not contained in this repository since they belong to their respective owners. You can find many places online to download your own free instrument samples.
+
+---
+
+### Disclaimer
 
 This is horrendously ugly code. My lazy buttocks has never leart how to propperly code any of the _interwebbz_ langages. These unintelligible lines of spaghetti code appear to be written in Javascript and are guaranteed to give you no less than 3 mildly disorienting headaches (I take no responsibility for the sudden urge to throw your computer out of the window). 
 The combination of hardcoded statements, no database and a squeeze of cucumber juice will make you question how a mutated atrocity of this proportion can go undetected by the [clean code secret police](https://clean-code-developer.com/). 
@@ -29,7 +41,7 @@ This work is licensed under the [WTFPL](http://www.wtfpl.net/about/) - and I mea
 
 ---
 
-## License - WTFPL
+### License - WTFPL
 
 ```
         DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
