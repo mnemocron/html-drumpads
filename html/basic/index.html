@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+
+<!-- http://www.storiesinflight.com/html5/audio.html -->
+<!-- http://unixpapa.com/js/key.html -->
+<!-- http://www.w3schools.com/jquery/tryit.asp?filename=tryjquery_html_toggleclass -->
+<!-- http://stackoverflow.com/questions/195951/change-an-elements-css-class-with-javascript -->
+<!-- http://www.flatuicolorpicker.com/all -->
+<!-- this is version 10.0 so far-->
+<!-- drum samples from https://realdrumsamples.com/ -->
+	
+	<head>
+		<meta name="date" content="Sat Mar 14 08:12 CET 2015" />
+		<meta name="author" content="Simon Burkhardt" />
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+		<link rel="stylesheet" type="text/css" href="style.css" />
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+		<title>Drumpad</title>
+	</head>
+	<body onkeydown="triggerAudio(event)" onkeyup="clearLights(event)">
+		<audio id="Sample_0" src="samples/sam0.wav" preload="auto"></audio>
+		<audio id="Sample_1" src="samples/sam1.wav" preload="auto"></audio>
+		<audio id="Sample_2" src="samples/sam2.wav" preload="auto"></audio>
+		<audio id="Sample_3" src="samples/sam3.wav" preload="auto"></audio>
+		<audio id="Sample_4" src="samples/sam4.wav" preload="auto"></audio>
+		<audio id="Sample_5" src="samples/sam5.wav" preload="auto"></audio>
+		<audio id="Sample_6" src="samples/sam6.wav" preload="auto"></audio>
+		<audio id="Sample_7" src="samples/sam7.wav" preload="auto"></audio>
+		<audio id="Sample_8" src="samples/sam8.wav" preload="auto"></audio>
+		<audio id="Sample_9" src="samples/sam9.wav" preload="auto"></audio>
+		<audio id="Sample_dot" src="samples/samdot.wav" preload="auto"></audio>
+		<audio id="Sample_plus" src="samples/samplus.wav" preload="auto"></audio>
+		<audio id="Sample_minus" src="samples/samminus.wav" preload="auto"></audio>
+		<audio id="Sample_multi" src="samples/sammulti.wav" preload="auto"></audio>
+		<audio id="Sample_enter" src="samples/samenter.wav" preload="auto"></audio>
+		<audio id="Sample_divi" src="samples/samdivi.wav" preload="auto"></audio>
+
+		<!-- <h3>MIDI-Player </br> v0.4 beta</h3> -->
+		<!-- <p>by Simon Burkhardt</p></body> -->
+		<div class="container">
+		  <div class="case">
+			<div class="top_text"><b>drum</b>pad
+				<div id="signature">&not; mnemocron</div>
+			</div>
+			<div class="btn" id="logo"></div>
+			<div class="btn" id="div"><div class="overlay inactive"onmousedown="toggleClass(this); play_multi_sound('Sample_divi');" onmouseup="toggleClass(this)"></div></div>
+			<div class="btn" id="mult"><div class="overlay inactive"onmousedown="toggleClass(this); play_multi_sound('Sample_multi');" onmouseup="toggleClass(this)"></div></div>
+			<div class="btn" id="minus"><div class="overlay inactive"onmousedown="toggleClass(this); play_multi_sound('Sample_minus');" onmouseup="toggleClass(this)"></div></div>
+			<div class="btn" id="seven"><div class="overlay inactive"onmousedown="toggleClass(this); play_multi_sound('Sample_7');" onmouseup="toggleClass(this)"></div></div>
+			<div class="btn" id="eight"><div class="overlay inactive"onmousedown="toggleClass(this); play_multi_sound('Sample_8');" onmouseup="toggleClass(this)"></div></div>
+			<div class="btn" id="nine"><div class="overlay inactive"onmousedown="toggleClass(this); play_multi_sound('Sample_9');" onmouseup="toggleClass(this)"></div></div>
+			<div class="btn" id="plus"><div class="overlay inactive"onmousedown="toggleClass(this); play_multi_sound('Sample_plus');" onmouseup="toggleClass(this)"></div></div>
+			<div class="btn" id="four"><div class="overlay inactive"onmousedown="toggleClass(this); play_multi_sound('Sample_4');" onmouseup="toggleClass(this)"></div></div>
+			<div class="btn" id="five"><div class="overlay inactive" onmousedown="toggleClass(this); play_multi_sound('Sample_5');" onmouseup="toggleClass(this)"></div></div>
+			<div class="btn" id="six"><div class="overlay inactive"onmousedown="toggleClass(this); play_multi_sound('Sample_6');" onmouseup="toggleClass(this)"></div></div>
+			<div class="btn" id="one"><div class="overlay inactive"onmousedown="toggleClass(this); play_multi_sound('Sample_1');" onmouseup="toggleClass(this)"></div></div>
+			<div class="btn" id="two"><div class="overlay inactive"onmousedown="toggleClass(this); play_multi_sound('Sample_2');" onmouseup="toggleClass(this)"></div></div>
+			<div class="btn" id="three"><div class="overlay inactive"onmousedown="toggleClass(this); play_multi_sound('Sample_3');" onmouseup="toggleClass(this)"></div></div>
+			<div class="btn" id="enter"><div class="overlay inactive"onmousedown="toggleClass(this); play_multi_sound('Sample_enter');" onmouseup="toggleClass(this)"></div></div>
+			<div class="btn" id="zero"><div class="overlay inactive"onmousedown="toggleClass(this); play_multi_sound('Sample_0');" onmouseup="toggleClass(this)"></div></div>
+			<div class="btn" id="dot"><div class="overlay inactive"onmousedown="toggleClass(this); play_multi_sound('Sample_dot');" onmouseup="toggleClass(this)"></div></div>
+		  </div>
+		</div>
+	</body>
+</html>
+
+<script type="text/javascript">
+function toggleClass(el){
+	if(el.className == "overlay active"){
+		el.className = "overlay inactive";
+	} else {
+		el.className = "overlay active";
+	}
+}
+</script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		var channel_max = 10;										// number of channels
+		audiochannels = new Array();
+		for (a=0;a<channel_max;a++) {									// prepare the channels
+			audiochannels[a] = new Array();
+			audiochannels[a]['channel'] = new Audio();						// create a new audio object
+			audiochannels[a]['finished'] = -1;							// expected end time for this channel
+		}
+	});
+	
+	function play_multi_sound(s) {
+		for (a=0;a<audiochannels.length;a++) {
+			thistime = new Date();
+			if (audiochannels[a]['finished'] < thistime.getTime()) {			// is this channel finished?
+				audiochannels[a]['finished'] = thistime.getTime() + document.getElementById(s).duration*1000;
+				audiochannels[a]['channel'].src = document.getElementById(s).src;
+				audiochannels[a]['channel'].load();
+				audiochannels[a]['channel'].play();
+				break;
+			}
+		}
+	}
+</script>
+<script>
+function triggerAudio(event) {
+    var x = event.which || event.keyCode;
+    if(x == "96"){
+    	if($("#zero > div").attr("class") == "overlay inactive"){
+			play_multi_sound('Sample_0');
+			$("#zero > div").toggleClass("active inactive");
+		}
+    } else if(x == "97"){
+    	if($("#one > div").attr("class") == "overlay inactive"){
+			play_multi_sound('Sample_1');
+			$("#one > div").toggleClass("active inactive");
+		}
+	} else if(x == "98"){
+		if($("#two > div").attr("class") == "overlay inactive"){
+			play_multi_sound('Sample_2');
+			$("#two > div").toggleClass("active inactive");
+		}
+	} else if(x == "99"){
+		if($("#three > div").attr("class") == "overlay inactive"){
+			play_multi_sound('Sample_3');
+			$("#three > div").toggleClass("active inactive");
+		}
+    } else if(x == "100"){
+    	if($("#four > div").attr("class") == "overlay inactive"){
+			play_multi_sound('Sample_4');
+			$("#four > div").toggleClass("active inactive");
+		}
+    } else if(x == "101"){
+    	if($("#five > div").attr("class") == "overlay inactive"){
+			play_multi_sound('Sample_5');
+			$("#five > div").toggleClass("active inactive");
+		}
+    } else if(x == "102"){
+    	if($("#six > div").attr("class") == "overlay inactive"){
+			play_multi_sound('Sample_6');
+			$("#six > div").toggleClass("active inactive");
+		}
+    } else if(x == "103"){
+    	if($("#seven > div").attr("class") == "overlay inactive"){
+			play_multi_sound('Sample_7');
+			$("#seven > div").toggleClass("active inactive");
+		}
+    } else if(x == "104"){
+    	if($("#eight > div").attr("class") == "overlay inactive"){
+			play_multi_sound('Sample_8');
+			$("#eight > div").toggleClass("active inactive");
+		}
+    } else if(x == "105"){
+    	if($("#nine > div").attr("class") == "overlay inactive"){
+			play_multi_sound('Sample_9');
+			$("#nine > div").toggleClass("active inactive");
+		}
+    } else if(x == "106"){
+    	if($("#mult > div").attr("class") == "overlay inactive"){
+			play_multi_sound('Sample_multi');
+			$("#mult > div").toggleClass("active inactive");
+		}
+    } else if(x == "107"){
+    	if($("#plus > div").attr("class") == "overlay inactive"){
+			play_multi_sound('Sample_plus');
+			$("#plus > div").toggleClass("active inactive");
+		}
+    } else if(x == "109"){
+    	if($("#minus > div").attr("class") == "overlay inactive"){
+			play_multi_sound('Sample_minus');
+			$("#minus > div").toggleClass("active inactive");
+		}
+    } else if(x == "110"){
+    	if($("#dot > div").attr("class") == "overlay inactive"){
+			play_multi_sound('Sample_dot');
+			$("#dot > div").toggleClass("active inactive");
+		}
+    } else if(x == "111"){
+    	if($("#div > div").attr("class") == "overlay inactive"){
+			play_multi_sound('Sample_divi');
+			$("#div > div").toggleClass("active inactive");
+		}
+    } else if(x == "13"){
+    	if($("#enter > div").attr("class") == "overlay inactive"){
+			play_multi_sound('Sample_enter');
+			$("#enter > div").toggleClass("active inactive");
+		}
+    } else {
+    }
+}
+</script>
+<script>
+function clearLights(event){
+	var x = event.which || event.keyCode;
+    if(x == "96"){
+		$("#zero > div").toggleClass("active inactive");
+    } else if(x == "97"){
+		$("#one > div").toggleClass("active inactive");
+	} else if(x == "98"){
+		$("#two > div").toggleClass("active inactive");
+	} else if(x == "99"){
+		$("#three > div").toggleClass("active inactive");
+    } else if(x == "100"){
+		$("#four > div").toggleClass("active inactive");
+    } else if(x == "101"){
+		$("#five > div").toggleClass("active inactive");
+    } else if(x == "102"){
+		$("#six > div").toggleClass("active inactive");
+    } else if(x == "103"){
+		$("#seven > div").toggleClass("active inactive");
+    } else if(x == "104"){
+		$("#eight > div").toggleClass("active inactive");
+    } else if(x == "105"){
+		$("#nine > div").toggleClass("active inactive");
+    } else if(x == "106"){
+		$("#mult > div").toggleClass("active inactive");
+    } else if(x == "107"){
+		$("#plus > div").toggleClass("active inactive");
+    } else if(x == "109"){
+		$("#minus > div").toggleClass("active inactive");
+    } else if(x == "110"){
+		$("#dot > div").toggleClass("active inactive");
+    } else if(x == "111"){
+		$("#div > div").toggleClass("active inactive");
+    } else if(x == "13"){
+		$("#enter > div").toggleClass("active inactive");
+    } else {
+    }
+}
+</script>
